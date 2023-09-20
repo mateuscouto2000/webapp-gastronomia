@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Divinos Sabores - Login</title>
+  <link rel="stylesheet" href="../static/form.css">
+  
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+  <div class="login-box">
+    <h2>Login</h2>
+
+    <form>
+      <div class="user-box">
+        <input type="text" id="inputEmail" name="email" required="">
+        <label>Email</label>
+      </div>
+      <div class="user-box">
+        <input type="password" id="inputSenha" name="senha" required="">
+        <label>Senha</label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" id="inputTipo" type="checkbox" value="user_adm" name="tipo_usuario"
+          id="defaultCheck1">
+        <label class="form-check-label" for="defaultCheck1" style="color: white;">
+          Login como admin
+        </label>
+      </div>
+
+      <a href="#" id="btnLogin">
+        <strong>Login</strong>
+      </a>
+
+      <div id="loadingModal" class="modal">
+        <div class="loader"></div>
+      </div>
+    </form>
+
+    <br>
+    <a href="/cadastro/usuario" target="_blank" rel="noopener noreferrer" style="color: white; ">Não tem cadastro ?
+      clique aqui para se cadastrar</a>
+  </div>
+
+  <script src="../static/dash.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script>
+
+    function longRunningFunction() {
+      document.getElementById('loadingModal').style.display = 'block';
+
+      setTimeout(function () {
+        document.getElementById('loadingModal').style.display = 'none';
+      }, 2000);
+    }
+
+    var login = async (email, senha, inputTipo) => {
+      longRunningFunction();
+      await fetch('http://127.0.0.1:5000/usuarios/login', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: email, senha: senha, inputTipo: inputTipo })
+      })
+        .then(resultado => resultado.json())
+        .then(resultado => {
+
+          if (resultado.mensagem) {
+            alert(resultado.mensagem)
+          }
+          else if (resultado.dados_montar_dash) {
+            document.cookie = 'usuarioLogado=' + resultado.token + ';'
+            window.location = '/dash'
+          }
+          else if (resultado.token) {
+            document.cookie = 'usuarioLogado=' + resultado.token + ';'
+            window.location = '/food'
+          }
+          console.log(resultado);
+
+        })
+
+    }
+
+    var dash = async (token, dados) => {
+      longRunningFunction();
+      await fetch('http://127.0.0.1:5000/dash', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({ dados: dados })
+      })
+        .then(resultado => {
+          console.log(resultado.ok);
+          window.location = '/dash'
+        })
+    }
+
+    $(document).ready(async function () {
+
+      $('#btnLogin').click(() => {
+
+        var email = $('#inputEmail').val()
+        var senha = $('#inputSenha').val()
+        var inputTipo = null
+        var checkbox = document.getElementById("inputTipo");
+        if (checkbox.checked) {
+          var valor = checkbox.value;
+
+          var inputTipo = valor
+        }
+        login(email, senha, inputTipo)
+      })
+    })
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divinos Sabores - Atualizar</title>
+    <link rel="stylesheet" href="../static/form.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+</head>
+
+<body>
+
+    <div class="login-box">
+        <h2>Atualizar Endereço</h2>
+        <small id="mgsErro" class="form-text"
+            style="color: red; display: none; margin-top: 20px; font-size: 18px;">Erro nos dados inseridos! Confira novamente.</small>
+
+        <form>
+            <div class="user-box">
+                <input type="text" id="cep" name="cep" onkeypress="$(this).mask('00000-000')">
+                
+                <label>CEP *</label>
+            </div>
+    
+            <div class="user-box">
+                <input type="text" id="bairro" name="bairro" required>
+                <label>Bairro</label>
+            </div>
+
+            <div class="user-box">
+                <input type="text" id="rua" name="rua" required>
+                <label>Rua</label>
+            </div>
+
+            <div class="user-box">
+                <input type="text" id="numero" name="numero" required>
+                <label>Número do endereço</label>
+            </div>
+
+            <div class="user-box">
+                <input type="text" id="cidade" name="cidade" required>
+                <label>Cidade</label>
+            </div>
+
+            <a href="#" id="btnCadastro">
+                <!-- <span></span>
+                <span></span>
+                <span></span>
+                <span></span> -->
+                <strong>Atualizar</strong>
+            </a>
+            <a href="/food">
+                <!-- <span></span>
+                <span></span>
+                <span></span>
+                <span></span> -->
+                <strong>Página principal</strong>
+            </a>
+            <div id="loadingModal" class="modal">
+                <div class="loader"></div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+
+        function longRunningFunction() {
+            document.getElementById('loadingModal').style.display = 'block';
+            setTimeout(function () {
+                document.getElementById('loadingModal').style.display = 'none';
+            }, 1000);
+        }
+
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    return cookie.substring(name.length + 1);
+                }
+            }
+            return null;
+        }
+
+
+        usuarioLogado = getCookie('usuarioLogado')
+        validar_usuario(usuarioLogado)
+        function validar_usuario(usuarioLogado) {
+            if (!usuarioLogado) {
+                window.location = '/'
+            }
+        }
+
+        var login = async (rua, bairro, cidade, numero, cep) => {
+            longRunningFunction();
+            await fetch('http://127.0.0.1:5000/usuarios/atualizar/dados', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': usuarioLogado
+                },
+                body: JSON.stringify({ rua:rua, bairro:bairro, cidade:cidade, numero:numero, cep:cep })
+            })
+                .then(resultado => resultado.json())
+                .then(resultado => {
+
+                    if (resultado.sucesso == 'atualizado') {
+
+                        alert("Endereço atualizado com sucesso! Volte para página inicial.")
+                    }
+                    else {
+                        alert(resultado.mensagem)
+                    }
+                })
+
+        }
+
+        $(document).ready(async function () {
+
+            $('#btnCadastro').click(() => {
+
+                var rua = $('#rua').val()
+                var bairro = $('#bairro').val()
+                var cidade = $('#cidade').val()
+                var numero = $('#numero').val()
+                var cep = $('#cep').val()
+
+                login(rua, bairro, cidade, numero, cep)
+
+            })
+
+        })
+
+        var lista = async () => {
+            await fetch('http://127.0.0.1:5000/usuarios/buscar/endereco', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': usuarioLogado
+                }
+            })
+                .then(resultado => resultado.json())
+                .then(resultado => {
+                    atualizarCampos(resultado.dados)
+                })
+        }
+
+        document.getElementById('cep').addEventListener('blur', function() {
+            var cep = this.value;
+            preencherDadosEndereco(cep);
+        });
+
+        function preencherDadosEndereco(cep) {
+
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao obter dados do endereço');
+            }
+
+            return response.json();
+            })
+            .then(data => {
+
+            document.getElementById('rua').value = data.logradouro;
+            document.getElementById('bairro').value = data.bairro;
+            document.getElementById('cidade').value = data.localidade;
+
+            })
+            .catch(error => {
+            console.error(error);
+            });
+        }
+
+
+        function atualizarCampos(dados) {
+            document.getElementById('rua').value = dados.rua;
+            document.getElementById('cep').value = dados.cep;
+            document.getElementById('bairro').value = dados.bairro;
+            document.getElementById('cidade').value = dados.cidade;
+            document.getElementById('numero').value = dados.numero_endereco;
+        }
+
+        lista()
+    </script>
+</body>
+
+</html>

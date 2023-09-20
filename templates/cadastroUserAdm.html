@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divinos Sabores - Cadastro Admin</title>
+    <link rel="stylesheet" href="../static/form.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+  <style>
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="login-box">
+    <h2>Cadastro de Administrador</h2>
+
+    <form>
+
+      <div class="user-box">
+        <input type="text" id="inputNome" name="" required="">
+        <label>Nome</label>
+      </div>
+
+      <div class="user-box">
+        <input type="text" id="inputEmail" name="" required="">
+        <label>Email</label>
+      </div>
+
+      <div class="user-box">
+        <input type="text" id="inputTelefone" required="required" maxlength="15" name="phone" onkeypress="$(this).mask('(00) 00000-0000')">
+        <label>Telefone</label>
+      </div>
+
+      <div class="user-box">
+        <input type="password" id="inputSenha" name="" required="">
+        <label>Senha</label>
+      </div>
+
+      <a href="#" id="btnCadastro">
+        <!-- <span></span>
+        <span></span>
+        <span></span>
+        <span></span> -->
+        <strong>Cadastrar</strong>
+      </a>
+
+      <a href="/dash" id="btnLogin">
+        <!-- <span></span>
+        <span></span>
+        <span></span>
+        <span></span> -->
+        <strong>Voltar</strong>
+      </a>
+
+      <div id="loadingModal" class="modal">
+        <div class="loader"></div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+
+    function longRunningFunction() {
+      document.getElementById('loadingModal').style.display = 'block';
+
+      setTimeout(function () {
+        // Hide the modal
+        document.getElementById('loadingModal').style.display = 'none';
+      }, 2000);
+    }
+
+    var login = async (email, senha, nome, telefone) => {
+      longRunningFunction();
+      await fetch('http://127.0.0.1:5000/usuarios/registrar/usuario/adm', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: email, senha: senha, nome: nome, telefone: telefone })
+      })
+        .then(resultado => resultado.json())
+        .then(resultado => {
+
+          if (resultado.status == 'sucesso') {
+            alert("Administrador cadastrado com sucesso!")
+            window.location = '/dash'
+          }
+          else {
+            var mensagem = "Erro: ";
+            mensagem += resultado.mensagem;
+            alert(mensagem)
+          }
+
+          console.log(resultado);
+
+        })
+
+    }
+
+    $(document).ready(async function () {
+
+      $('#btnCadastro').click(() => {
+
+        var email = $('#inputEmail').val()
+        var senha = $('#inputSenha').val()
+        var nome = $('#inputNome').val()
+        var telefone = $('#inputTelefone').val()
+
+        login(email, senha, nome, telefone)
+
+      })
+
+    })
+
+  </script>
+</body>
+
+</html>

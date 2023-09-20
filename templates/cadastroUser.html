@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divinos Sabores - Cadastro</title>
+    <link rel="stylesheet" href="../static/form.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+  <style>
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="login-box" style="top: 70%;">
+    <h2>Cadastro de Usuário</h2>
+    <form>
+      <div class="user-box">
+        <input type="text" id="inputNome" name="inputNome" required="">
+        <label>Nome</label>
+      </div>
+
+      <div class="user-box">
+        <input type="text" id="inputEmail" name="inputEmail" required="">
+        <label>Email</label>
+      </div>
+
+      <div class="user-box">
+        <input type="text" id="inputTelefone" required="required" maxlength="15" name="phone" onkeypress="$(this).mask('(00) 00000-0000')">
+        <label>Telefone</label>
+      </div>
+
+      <div class="user-box">
+        <input type="text" id="cep" name="cep" required="" onkeypress="$(this).mask('00000-000')">
+        <label>CEP</label>
+      </div>
+
+      <div class="user-box">
+        <input type="text" id="rua" name="rua" required="">
+        <label>Rua</label>
+      </div>
+
+      <div class="user-box">
+        <input type="text" id="bairro" name="bairro" required="">
+        <label>Bairro</label>
+      </div>
+
+      <div class="user-box">
+        <input type="text" id="cidade" name="cidade" required="">
+        <label>Cidade</label>
+      </div>
+
+      <div class="user-box">
+        <input type="text" id="numero_endereco" name="numero_endereco" required="">
+        <label>Número do endereço</label>
+      </div>
+
+      <div class="user-box">
+        <input type="password" id="inputSenha" name="" required="">
+        <label>Senha</label>
+      </div>
+
+      <a href="#" id="btnCadastro">
+        <!-- <span></span>
+        <span></span>
+        <span></span>
+        <span></span> -->
+        <strong>Cadastrar</strong>
+      </a> <br>
+      <!-- <a href="/" id="btnLogin">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <strong>Já tenho conta, quero logar</strong>
+      </a> -->
+      <div id="loadingModal" class="modal">
+        <div class="loader"></div>
+      </div>
+    </form>
+
+    <br>
+    <a href="/" target="_blank" rel="noopener noreferrer" style="color: white; ">Já tem cadastro?
+      clique aqui para se autenticar!</a>
+  </div>
+
+  <script>
+
+    function exibirModal() {
+      var modal = document.getElementById("modal");
+      modal.style.display = "block";
+    }
+
+    function longRunningFunction() {
+      document.getElementById('loadingModal').style.display = 'block';
+
+      setTimeout(function () {
+        document.getElementById('loadingModal').style.display = 'none';
+      }, 2000);
+    }
+
+    var login = async (email, senha, nome, telefone, rua, cep, bairro, cidade, numero_endereco) => {
+      longRunningFunction();
+      await fetch('http://127.0.0.1:5000/usuarios/registrar/usuario', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: email, senha: senha, nome: nome, telefone: telefone, rua: rua, cep: cep, bairro: bairro, cidade: cidade, numero_endereco: numero_endereco })
+      })
+        .then(resultado => resultado.json())
+        .then(resultado => {
+
+          if (resultado.status == 'sucesso') {
+            alert("Cadastrado com sucesso! Realize o login.")
+            window.location = '/'
+          }
+          else {
+            var mensagem = "Erro: ";
+            mensagem += resultado.mensagem;
+            alert(mensagem)
+          }
+          console.log(resultado);
+
+        })
+
+    }
+
+    $('#btnCadastro').click(() => {
+
+      var email = $('#inputEmail').val()
+      var senha = $('#inputSenha').val()
+      var nome = $('#inputNome').val()
+      var rua = $('#rua').val()
+      var cep = $('#cep').val()
+      var bairro = $('#bairro').val()
+      var cidade = $('#cidade').val()
+      var numero_endereco = $('#numero_endereco').val()
+      var telefone = $('#inputTelefone').val()
+
+      login(email, senha, nome, telefone, rua, cep, bairro, cidade, numero_endereco)
+
+    })
+
+    document.getElementById('cep').addEventListener('blur', function() {
+        var cep = this.value;
+        preencherDadosEndereco(cep);
+    });
+
+    function preencherDadosEndereco(cep) {
+
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao obter dados do endereço');
+        }
+
+        return response.json();
+        })
+        .then(data => {
+
+        document.getElementById('rua').value = data.logradouro;
+        document.getElementById('bairro').value = data.bairro;
+        document.getElementById('cidade').value = data.localidade;
+
+        })
+        .catch(error => {
+        console.error(error);
+        });
+    }
+
+  </script>
+
+</body>
+
+</html>

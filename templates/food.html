@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html> 
+
+<head>
+    <!-- Load Google font on the first <head> to prevent error in IE -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:600,800,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="/static/modal.css">
+
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Divinos Sabores - Home</title>
+    <meta name="author" content="Divinos Sabores" />
+    <meta name="description" content="Divinos Sabores Description" />
+    <meta name="keywords" content="Divinos Sabores Keyword" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet/less" type="text/css" href="../static/css/style.less" />
+
+
+    <style>
+
+
+    </style>
+
+    <!-- Option for Less JS -->
+    <script>
+        less = {
+            env: "development",
+            async: false,
+            fileAsync: false,
+            poll: 1000,
+            functions: {},
+            dumpLineNumbers: "comments",
+            relativeUrls: false
+        };
+    </script>
+    <script type="text/javascript" src="../static/js/less.min.js"></script>
+    <script type="text/javascript" src="../static/js/retina.min.js"></script>
+    <script type="text/javascript" src="../static/js/modernizr.custom.71422.js"></script>
+    <link rel="stylesheet" href="../static/form-modal.css">
+</head>
+
+<body>
+    <!-- Menu -->
+    <nav class="menu menu-left">
+        <div class="close-menu-btn icon-menu active">&nbsp;</div>
+        <ul>
+            <li class="active"><a href="food">Menu</a></li>
+            <li><a href="about">Sobre Nós</a></li>
+        </ul>
+    </nav>
+    <div class="menu-btn"><span class="icon-menu">&nbsp;</span>Menu</div>
+
+
+    <!-- Site Overlay -->
+    <div class="site-overlay"></div>
+
+    <!-- Your Content -->
+    <div id="container">
+
+        <div class="container" style="display: flex; justify-content: center; align-items: center;">
+            <div class="main-container row">
+                <div id="logo">
+                    <a href="/food">
+                        <div class="logo-icon">
+                            <img src="static/img/upload/camarao_logo.png"
+                                style=" align-items: center; width: 128px; height: 100px;" width="500" height="500" />
+                        </div>
+                        <div class="logo-type">Divinos Sabores</div>
+                        <div class="logo-slogan">Comida que encanta!</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container full-page">
+            <div id="our-food" class="main-container">
+                <div class="row">
+                </div>
+                <div class="clear"></div>
+                <div id="filter-foods">
+                    <div class="filter button .grey-button" data-filter=".salgados">Salgados</div>
+                    <div class="filter button .grey-button" data-filter=".sets">Bebidas</div>
+                    <div class="filter button .grey-button" data-filter=".sobremesas">Sobremesas</div>
+                    <!-- <div class="filter button .grey-button" data-filter="all">Tudo</div> -->
+                    <p>
+                        Selecione a opção que deseja comer!
+                    </p>
+                    <p>
+                        Ao finalizar suas escolhas lembre de confirmar seu pedido.
+                    </p>
+
+                    <a href="#demo-modal-lista" onclick="renderizarListaSelecionados()">
+                        <div class="button">Ver itens selecionados</div>
+                    </a>
+
+                    <a href="#demo-modal" class="icon" rel="noopener noreferrer"
+                        style="align-items: center; display: flex;" onclick="validarContador()">
+                        <img src="https://img.icons8.com/ios-filled/50/chef-hat.png" height="50" width="50" />
+                        <p id="count_carrinho">
+                            
+                        </p>
+                    </a><br>
+
+                    <a href="#" class="icon" rel="noopener noreferrer"
+                        style="align-items: center; display: flex;" onclick="validarContadorRecibo()">
+                        <img src="https://img.icons8.com/ios/50/check--v1.png" height="50" width="50" />
+                    </a>
+
+                    <!-- https://img.icons8.com/pastel-glyph/64/000000/shopping-cart--v2.png -->
+
+                    <!-- <div id="cart" class="cart" data-totalitems="0">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div> -->
+
+                </div>
+                <div class="clear"></div>
+                <div class="row">
+                    <div id="foods">
+                        <a href="" onclick=""></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="clear space-area"></div>
+
+        <div class="triangle top footer"></div>
+        <div class="container footer">
+            <div id="footer" class="main-container">
+
+                <div class="footer-bottom row">
+                    <div class="footer-copyright col">
+                        <div class="footer-copyright-text">Copyright 2023 Divinos Sabores. Todos os direitos reservados.
+                        </div>
+                    </div>
+                    <div class="footer-social-media col">
+                        <div class="social-media-icon">
+                            <a href="#" class="fa fa-instagram no-colora" style="font-size:25px;"></a>&nbsp;&nbsp;
+                            <a href="#" class="fa fa-facebook no-colora" style="font-size:25px;"></a>&nbsp;&nbsp;
+                            <a href="#" class="fa fa-youtube-play no-colora" style="font-size:25px;"></a>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+    </div>
+
+
+    <div id="demo-modal" class="modal">
+        <div class="content">
+            <h2>Antes de finalizar o seu pedido</h2>
+
+            <p>
+                Confirme onde seu pedido será consumido <br>
+                <strong>*Se for comer no local digite o número da mesa*</strong>
+            </p>
+
+            <form id="finalizarPedido">
+                <input type="checkbox" id="local" class="form-check-input" name="opcao" value="Comer no local" checked onclick="limitarSelecao(this)">
+                <label for="html" class="form-check-label">Comer no local</label><br><br>
+
+                <label for="html" id="labelMesa">Número da mesa</label>
+                <input type="number"  class="form-control" id="mesa" name="mesa" value="Número da mesa"><br>
+                
+
+                <input type="checkbox" class="form-check-input" id="entrega" name="opcao" value="Para entrega" onclick="limitarSelecao(this)">
+                
+                <label for="html" class="form-check-label">Para entrega</label><br><br>
+
+                <button type="submit" class="btn btn-success">Finalizar pedido</button><!-- footer-btn-close -->
+            </form>
+            <br>
+            <a href="/atualizar/endereco" target="_blank" rel="noopener noreferrer">
+                <p>
+                    Deseja atualizar o seu endereço? Clique aqui.
+                </p>
+            </a>
+            <a href="#" class="close">&times;</a>
+        </div>
+    </div>
+
+    <div id="modal-cadastro" class="modal_cadastro">
+        <div class="content">
+            <h2>Selecione a quantidade</h2>
+            <form id="cadastroPedido">
+                <input type="number" id="quantidade" name="quantidade" value="1"><br><br><br>
+                <button type="submit" class="footer-btn-close">Finalizar pedido</button>
+            </form>
+            <br><br><br>
+            <a href="#" class="close">&times;</a>
+        </div>
+    </div>
+
+    <div id="demo-modal-lista" class="modal">
+        <div class="content">
+            <h2>Esses são os itens selecionados:</h2>
+            <table>
+                <thead>
+                </thead>
+                <tbody id="selecionados">
+                    
+                </tbody>
+            </table>
+            <a href="#" class="close">&times;</a>
+        </div>
+    </div>
+
+    
+
+    <script type="text/javascript" src="../static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/js/pushy.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.mixitup.min.js"></script>
+    <script type="text/javascript" src="../static/js/browser.selector.js"></script>
+    <script type="text/javascript" src="../static/js/fastclick.js"></script>
+    <script type="text/javascript" src="../static/js/script.js"></script>
+    <script src="/static/food.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="./node_modules/lodash/lodash.min.js"></script>
+    <script src="./js/query.min.js"></script>
+    <script type="text/javascript">
+        $('#foods').mixItUp();
+
+        function limitarSelecao(checkbox) {
+
+            var checkboxes = document.getElementsByName('opcao');
+
+            checkboxes.forEach(function(current) {
+                if (current !== checkbox) {
+                current.checked = false;
+                }
+            });
+
+            var labelMesa = document.getElementById('labelMesa');
+            var inputMesa = document.getElementById('mesa');
+
+            if (checkbox.id === 'entrega') {
+                if (checkbox.checked) {
+                    labelMesa.style.display = 'none';
+                    inputMesa.style.display = 'none';
+                }
+            }
+            else if (checkbox.id === 'local') {
+                if (checkbox.checked) {
+                    labelMesa.style.display = 'block';
+                    inputMesa.style.display = 'block';
+                } else {
+                    labelMesa.style.display = 'none';
+                    inputMesa.style.display = 'none';
+                }
+            }
+        }
+    </script>
+
+</body>
